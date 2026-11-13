@@ -5,13 +5,15 @@ import java.time.LocalDate;
 public class Tarefa {
 
     private String descricao;
+    private String Data;
     private LocalDate dataCriacao;
     private LocalDate dataFinalizacao;
     private LocalDate dataVencimento;
     private Boolean finalizada;
     private int ordem;
 
-    public Tarefa(String texto, int ordem) {
+    public Tarefa(String texto, int ordem, String data) {
+        this.Data = data;
         this.dataCriacao = LocalDate.now();
         this.descricao = texto;
         this.ordem = ordem;
@@ -63,5 +65,11 @@ public class Tarefa {
 
     public void setOrdem(int ordem) {
         this.ordem = ordem;
+    }
+
+    public String getData(){return this.Data;}
+
+    public void setData(String data) {
+        this.Data = data;
     }
 }

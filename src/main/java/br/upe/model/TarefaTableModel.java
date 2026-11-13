@@ -24,7 +24,7 @@ public class TarefaTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -32,7 +32,9 @@ public class TarefaTableModel extends AbstractTableModel {
         Tarefa tarefa = tarefasAtivas.get(rowIndex);
         switch (columnIndex) {
             case 0 : return tarefa.isFinalizada();
-            case 1 : return tarefa.getDescricao();
+            case 1 : return tarefa.getData();
+            case 2 : return tarefa.getDescricao();
+
         }
         return null;
     }
@@ -41,6 +43,7 @@ public class TarefaTableModel extends AbstractTableModel {
         switch (c) {
             case 0 : return Boolean.class;
             case 1 : return String.class;
+            case 2 : return  String.class;
         }
         return null;
     }

@@ -16,6 +16,7 @@ import java.util.List;
 public class TelaPrincipal {
     private JPanel pnlMain;
     private JTextField txtDescricaoTarefa;
+    private JTextField txtData;
     private JButton btnAdicionarTarefa;
     private JPanel pnlAdicionar;
     private JTable tblTarefas;
@@ -29,8 +30,9 @@ public class TelaPrincipal {
         super();
         tarefas = new ArrayList<>();
         btnAdicionarTarefa.addActionListener(e -> {
-            adicionarTarefa(txtDescricaoTarefa.getText());
+            adicionarTarefa(txtDescricaoTarefa.getText(), txtData.getText());
             txtDescricaoTarefa.setText("");
+            txtData.setText("");
         });
         chkExibirFinalizadas.addActionListener(e -> {
             boolean selecionado = ((JCheckBox) e.getSource()).isSelected();
@@ -38,8 +40,8 @@ public class TelaPrincipal {
         });
     }
 
-    private void adicionarTarefa(String texto) {
-        Tarefa tarefa = new Tarefa(texto, tarefas.size());
+    private void adicionarTarefa(String texto, String data) {
+        Tarefa tarefa = new Tarefa(texto, tarefas.size(), data );
         controlador.adicionarTarefaAtiva(tarefa);
         tblTarefas.revalidate();
         tblTarefas.repaint();
@@ -53,6 +55,14 @@ public class TelaPrincipal {
         controlador = new TarefaControlador();
         tblTarefas = new JTable(controlador.getTarefaTableModel());
         tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
+        tblTarefas.getColumnModel().getColumn(1).setMaxWidth(300);
+        tblTarefas.getColumnModel().getColumn(1).setPreferredWidth(100);
+
+
+
     }
+
+
+
 
 }
