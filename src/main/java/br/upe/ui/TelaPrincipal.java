@@ -55,6 +55,7 @@ public class TelaPrincipal {
         controlador = new TarefaControlador();
         tblTarefas = new JTable(controlador.getTarefaTableModel());
         tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
+        controlador.getTarefaTableModel().addTableModelListener(e -> controlador.salvarTarefas());
         tblTarefas.getColumnModel().getColumn(1).setMaxWidth(300);
         tblTarefas.getColumnModel().getColumn(1).setPreferredWidth(100);
 
