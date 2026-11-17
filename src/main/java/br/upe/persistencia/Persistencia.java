@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,17 +21,17 @@ public class Persistencia {
             for (Tarefa t : tarefas) {
                 String descricao = t.getDescricao().replace(";", ",");
 
-                String data = t.getData();
+                LocalDate data = t.getData();
                 if (data == null) {
-                    data = "";
+                    data = null ;
                 }
-
+                String hora = t.getHora();
                 String finalizada = "false";
                 if (t.isFinalizada() != null && t.isFinalizada()) {
                     finalizada = "true";
                 }
 
-                escritor.println(descricao + ";" + data + ";" + t.getOrdem() + ";" + finalizada);
+                escritor.println(descricao + ";" + hora + ";" + data + ";" + t.getOrdem() + ";" + finalizada);
             }
 
             escritor.close();
@@ -53,9 +54,9 @@ public class Persistencia {
 
             while (linha != null) {
                 String[] partes = linha.split(";", -1);
-
+                LocalDate data = LocalDate.parse(partes[2]);
                 if (partes.length == 4) {
-                    Tarefa t = new Tarefa(partes[0], Integer.parseInt(partes[2]), partes[1]);
+                    Tarefa t = new Tarefa(partes[0], Integer.parseInt(partes[3]), data ,  partes[1]);
                     t.setFinalizada(partes[3].equals("true"));
                     lista.add(t);
                 }

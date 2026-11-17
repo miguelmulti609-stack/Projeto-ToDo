@@ -10,6 +10,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +19,12 @@ public class TelaPrincipal {
     private JPanel pnlMain;
     private JTextField txtDescricaoTarefa;
     private JTextField txtData;
+    private JTextField txtHora;
     private JButton btnAdicionarTarefa;
     private JPanel pnlAdicionar;
     private JTable tblTarefas;
     private JCheckBox chkExibirFinalizadas;
+    private JTextField textField1;
 
     private List<Tarefa> tarefas;
 
@@ -30,7 +34,7 @@ public class TelaPrincipal {
         super();
         tarefas = new ArrayList<>();
         btnAdicionarTarefa.addActionListener(e -> {
-            adicionarTarefa(txtDescricaoTarefa.getText(), txtData.getText());
+            adicionarTarefa(txtDescricaoTarefa.getText(),  txtData.getText(), txtHora.getText());
             txtDescricaoTarefa.setText("");
             txtData.setText("");
         });
@@ -40,8 +44,11 @@ public class TelaPrincipal {
         });
     }
 
-    private void adicionarTarefa(String texto, String data) {
-        Tarefa tarefa = new Tarefa(texto, tarefas.size(), data );
+    private void adicionarTarefa(String texto, String data, String hora) {
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate Date = LocalDate.parse(data, formatador);
+
+        Tarefa tarefa = new Tarefa(texto, tarefas.size(), Date, hora );
         controlador.adicionarTarefaAtiva(tarefa);
         tblTarefas.revalidate();
         tblTarefas.repaint();
