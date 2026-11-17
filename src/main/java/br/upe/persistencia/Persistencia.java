@@ -1,40 +1,46 @@
+
 package br.upe.persistencia;
 
 import br.upe.model.Tarefa;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Persistencia {
 
     public static void salvar(List<Tarefa> tarefas) {
-        try {
-            PrintWriter escritor = new PrintWriter(new FileWriter("tarefas.txt"));
+        try (BufferedWriter escritor =
+                     new BufferedWriter(new FileWriter("tarefas.txt"))) {
 
             for (Tarefa t : tarefas) {
+
                 String descricao = t.getDescricao().replace(";", ",");
+                String hora = t.getHora() == null ? "" : t.getHora().toString();
+                String data = t.getData() == null ? "" : t.getData().toString();
 
-                LocalDate data = t.getData();
-                if (data == null) {
-                    data = null ;
-                }
-                String hora = t.getHora();
-                String finalizada = "false";
-                if (t.isFinalizada() != null && t.isFinalizada()) {
-                    finalizada = "true";
-                }
+                String finalizada = Boolean.TRUE.equals(t.isFinalizada())
+                        ? "true"
+                        : "false";
 
-                escritor.println(descricao + ";" + hora + ";" + data + ";" + t.getOrdem() + ";" + finalizada);
+                escritor.write(
+                        descricao + ";" +
+                                hora + ";" +
+                                data + ";" +
+                                t.getOrdem() + ";" +
+                                finalizada
+                );
+
+                escritor.newLine();
             }
 
-            escritor.close();
         } catch (IOException e) {
             System.out.println("Erro ao salvar: " + e.getMessage());
         }
@@ -44,27 +50,54 @@ public class Persistencia {
         List<Tarefa> lista = new ArrayList<>();
 
         File arquivo = new File("tarefas.txt");
+
         if (!arquivo.exists()) {
             return lista;
         }
 
-        try {
-            BufferedReader leitor = new BufferedReader(new FileReader(arquivo));
-            String linha = leitor.readLine();
+        try (BufferedReader leitor =
+                     new BufferedReader(new FileReader(arquivo))) {
 
-            while (linha != null) {
+            String linha;
+
+            while ((linha = leitor.readLine()) != null) {
+
                 String[] partes = linha.split(";", -1);
-                LocalDate data = LocalDate.parse(partes[2]);
-                if (partes.length == 4) {
-                    Tarefa t = new Tarefa(partes[0], Integer.parseInt(partes[3]), data ,  partes[1]);
-                    t.setFinalizada(partes[3].equals("true"));
-                    lista.add(t);
+
+                if (partes.length != 5) {
+                    continue;
                 }
 
-                linha = leitor.readLine();
+                try {
+                    String descricao = partes[0];
+                    LocalTime hora = LocalTime.parse(partes[1]);
+
+                    LocalDate data = partes[2].isEmpty()
+                            ? null
+                            : LocalDate.parse(partes[2]);
+
+                    int ordem = Integer.parseInt(partes[3]);
+
+                    boolean finalizada = Boolean.parseBoolean(partes[4]);
+
+                    Tarefa t = new Tarefa(
+                            descricao,
+                            ordem,
+                            data,
+                            hora
+                    );
+
+                    t.setFinalizada(finalizada);
+
+                    lista.add(t);
+
+                } catch (RuntimeException e) {
+                    System.out.println(
+                            "Erro ao interpretar tarefa: " + linha
+                    );
+                }
             }
 
-            leitor.close();
         } catch (IOException e) {
             System.out.println("Erro ao carregar: " + e.getMessage());
         }

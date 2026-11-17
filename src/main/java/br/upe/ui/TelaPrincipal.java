@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,6 @@ public class TelaPrincipal {
     private JPanel pnlAdicionar;
     private JTable tblTarefas;
     private JCheckBox chkExibirFinalizadas;
-    private JTextField textField1;
 
     private List<Tarefa> tarefas;
 
@@ -34,17 +34,35 @@ public class TelaPrincipal {
         super();
         tarefas = new ArrayList<>();
         btnAdicionarTarefa.addActionListener(e -> {
-            adicionarTarefa(txtDescricaoTarefa.getText(),  txtData.getText(), txtHora.getText());
-            txtDescricaoTarefa.setText("");
-            txtData.setText("");
+            try {
+                LocalTime hora = LocalTime.parse(txtHora.getText());
+                adicionarTarefa(
+                        txtDescricaoTarefa.getText(),
+                        txtData.getText(),
+                        hora
+                );
+
+                txtDescricaoTarefa.setText("");
+                txtData.setText("");
+                txtHora.setText("");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(
+                        pnlMain,
+                        "Erro, campo preenchido incorretamente.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
         });
+
         chkExibirFinalizadas.addActionListener(e -> {
             boolean selecionado = ((JCheckBox) e.getSource()).isSelected();
             controlador.exibirFinalizadas(selecionado);
         });
     }
 
-    private void adicionarTarefa(String texto, String data, String hora) {
+    private void adicionarTarefa(String texto, String data, LocalTime hora) {
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate Date = LocalDate.parse(data, formatador);
 
@@ -63,8 +81,10 @@ public class TelaPrincipal {
         tblTarefas = new JTable(controlador.getTarefaTableModel());
         tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
         controlador.getTarefaTableModel().addTableModelListener(e -> controlador.salvarTarefas());
-        tblTarefas.getColumnModel().getColumn(1).setMaxWidth(300);
+        tblTarefas.getColumnModel().getColumn(1).setMaxWidth(200);
         tblTarefas.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tblTarefas.getColumnModel().getColumn(2).setMaxWidth(300);
+        tblTarefas.getColumnModel().getColumn(2).setPreferredWidth(100);
 
 
 

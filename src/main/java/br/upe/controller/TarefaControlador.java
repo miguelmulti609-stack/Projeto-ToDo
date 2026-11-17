@@ -21,7 +21,7 @@ public class TarefaControlador {
 
     //Metodos de negocio
     public void adicionarTarefaAtiva(Tarefa tarefa) {
-        this.tarefaTableModel.getTarefasAtivas().add(tarefa);
+        this.tarefaTableModel.adicionarTarefa(tarefa);
         salvarTarefas();
     }
 

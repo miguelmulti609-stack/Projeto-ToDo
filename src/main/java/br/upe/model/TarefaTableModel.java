@@ -1,13 +1,14 @@
+
 package br.upe.model;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 public class TarefaTableModel extends AbstractTableModel {
+
     private List<Tarefa> tarefasFinalizadas;
     private List<Tarefa> tarefasAtivas;
 
@@ -18,37 +19,66 @@ public class TarefaTableModel extends AbstractTableModel {
         tarefasFinalizadas = new ArrayList<>();
     }
 
+    private List<Tarefa> getTarefasExibidas() {
+        List<Tarefa> tarefas = new ArrayList<>(tarefasAtivas);
+
+        if (exibirFinalizadas) {
+            tarefas.addAll(tarefasFinalizadas);
+        }
+
+        return tarefas;
+    }
+
     @Override
     public int getRowCount() {
-        return tarefasAtivas.size();
+        return getTarefasExibidas().size();
     }
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 4;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Tarefa tarefa = tarefasAtivas.get(rowIndex);
-        switch (columnIndex) {
-            case 0 : return tarefa.isFinalizada();
-            case 1 : return tarefa.getHora();
-            case 2 : return tarefa.getData();
-            case 3 : return tarefa.getDescricao();
+        Tarefa tarefa = getTarefasExibidas().get(rowIndex);
 
+        switch (columnIndex) {
+            case 0:
+                return tarefa.isFinalizada();
+
+            case 1:
+                return tarefa.getHora();
+
+            case 2:
+                return tarefa.getData();
+
+            case 3:
+                return tarefa.getDescricao();
+
+            default:
+                return null;
         }
-        return null;
     }
 
-    public Class getColumnClass(int c) {
+    @Override
+    public Class<?> getColumnClass(int c) {
         switch (c) {
-            case 0 : return Boolean.class;
-            case 1 : return LocalDate.class;
-            case 2 : return  String.class;
-            case 3 : return  String.class;
+            case 0:
+                return Boolean.class;
+
+            case 1:
+                return String.class;
+
+            case 2:
+                return LocalDate.class;
+
+            case 3:
+                return LocalTime.class;
+
+            default:
+                return Object.class;
         }
-        return null;
     }
 
     @Override
@@ -58,32 +88,44 @@ public class TarefaTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        Tarefa tarefa = tarefasAtivas.get(rowIndex);
-        tarefa.setFinalizada((Boolean) aValue);
-        if (this.exibirFinalizadas) {
-            if ((Boolean) aValue) {
+        if (columnIndex != 0 || !(aValue instanceof Boolean)) {
+            return;
+        }
+
+        Tarefa tarefa = getTarefasExibidas().get(rowIndex);
+
+        boolean finalizada = (Boolean) aValue;
+
+        tarefa.setFinalizada(finalizada);
+
+        if (finalizada) {
+            tarefasAtivas.remove(tarefa);
+
+            if (!tarefasFinalizadas.contains(tarefa)) {
                 tarefasFinalizadas.add(tarefa);
-            } else {
-                tarefasFinalizadas.remove(tarefa);
             }
         } else {
-            if ((Boolean) aValue) {
-                tarefasAtivas.remove(tarefa);
-                tarefasFinalizadas.add(tarefa);
+            tarefasFinalizadas.remove(tarefa);
+
+            if (!tarefasAtivas.contains(tarefa)) {
+                tarefasAtivas.add(tarefa);
             }
         }
-        this.fireTableDataChanged();
+
+        fireTableDataChanged();
     }
 
+    public void adicionarTarefa(Tarefa tarefa) {
+        int indice = tarefasAtivas.size();
+
+        tarefasAtivas.add(tarefa);
+
+        fireTableRowsInserted(indice, indice);
+    }
 
     public void setExibirFinalizadas(boolean selecionado) {
         this.exibirFinalizadas = selecionado;
-        if (this.exibirFinalizadas) {
-            this.tarefasAtivas.addAll(this.tarefasFinalizadas);
-        } else {
-            this.tarefasAtivas.removeAll(this.tarefasFinalizadas);
-        }
-        this.fireTableDataChanged();
+        fireTableDataChanged();
     }
 
     public List<Tarefa> getTarefasFinalizadas() {
@@ -92,6 +134,7 @@ public class TarefaTableModel extends AbstractTableModel {
 
     public void setTarefasFinalizadas(List<Tarefa> tarefasFinalizadas) {
         this.tarefasFinalizadas = tarefasFinalizadas;
+        fireTableDataChanged();
     }
 
     public List<Tarefa> getTarefasAtivas() {
@@ -100,10 +143,10 @@ public class TarefaTableModel extends AbstractTableModel {
 
     public void setTarefasAtivas(List<Tarefa> tarefasAtivas) {
         this.tarefasAtivas = tarefasAtivas;
+        fireTableDataChanged();
     }
 
     public boolean isExibirFinalizadas() {
         return exibirFinalizadas;
     }
-
 }

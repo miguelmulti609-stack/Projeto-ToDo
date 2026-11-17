@@ -1,19 +1,19 @@
 package br.upe.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Tarefa {
 
     private String descricao;
     private LocalDate Data;
-    private String Hora;
-    private LocalDate dataCriacao;
+    private LocalTime Hora;    private LocalDate dataCriacao;
     private LocalDate dataFinalizacao;
     private LocalDate dataVencimento;
     private Boolean finalizada;
     private int ordem;
 
-    public Tarefa(String texto, int ordem, LocalDate data, String hora) {
+    public Tarefa(String texto, int ordem, LocalDate data, LocalTime hora) {
         this.Data = data;
         this.Hora = hora;
         this.dataCriacao = LocalDate.now();
@@ -75,9 +75,9 @@ public class Tarefa {
         this.Data = data;
     }
 
-    public String getHora(){return this.Hora;}
+    public LocalTime getHora(){return this.Hora;}
 
-    public void setHora(String hora) {
+    public void setHora(LocalTime hora) {
         this.Hora = hora;
     }
 }
