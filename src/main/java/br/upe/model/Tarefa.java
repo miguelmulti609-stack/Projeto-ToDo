@@ -7,15 +7,18 @@ public class Tarefa {
 
     private String descricao;
     private LocalDate Data;
-    private LocalTime Hora;    private LocalDate dataCriacao;
+    private LocalTime Hora;
+    private Integer DuracaoTarefa;
+    private LocalDate dataCriacao;
     private LocalDate dataFinalizacao;
     private LocalDate dataVencimento;
     private Boolean finalizada;
     private int ordem;
 
-    public Tarefa(String texto, int ordem, LocalDate data, LocalTime hora) {
+    public Tarefa(String texto, int ordem, LocalDate data, LocalTime hora, Integer duracao) {
         this.Data = data;
         this.Hora = hora;
+        this.DuracaoTarefa = duracao;
         this.dataCriacao = LocalDate.now();
         this.descricao = texto;
         this.ordem = ordem;
@@ -80,5 +83,6 @@ public class Tarefa {
     public void setHora(LocalTime hora) {
         this.Hora = hora;
     }
+    public Integer getDuracaoTarefa(){return this.DuracaoTarefa;}
 }
 

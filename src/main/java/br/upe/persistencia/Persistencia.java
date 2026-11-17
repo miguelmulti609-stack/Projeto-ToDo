@@ -64,7 +64,7 @@ public class Persistencia {
 
                 String[] partes = linha.split(";", -1);
 
-                if (partes.length != 5) {
+                if (partes.length != 6) {
                     continue;
                 }
 
@@ -79,12 +79,13 @@ public class Persistencia {
                     int ordem = Integer.parseInt(partes[3]);
 
                     boolean finalizada = Boolean.parseBoolean(partes[4]);
-
+                    Integer duracao = Integer.parseInt(partes[5]);
                     Tarefa t = new Tarefa(
                             descricao,
                             ordem,
                             data,
-                            hora
+                            hora,
+                            duracao
                     );
 
                     t.setFinalizada(finalizada);
