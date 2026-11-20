@@ -35,7 +35,8 @@ public class Persistencia {
                                 hora + ";" +
                                 data + ";" +
                                 t.getOrdem() + ";" +
-                                finalizada
+                                finalizada + ";" +
+                                t.getDuracaoTarefa()
                 );
 
                 escritor.newLine();

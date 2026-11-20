@@ -36,7 +36,7 @@ public class TarefaTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -56,6 +56,9 @@ public class TarefaTableModel extends AbstractTableModel {
             case 3:
                 return tarefa.getDescricao();
 
+            case 4:
+                return tarefa.getDuracaoTarefa() + " min";
+
             default:
                 return null;
         }
@@ -66,16 +69,14 @@ public class TarefaTableModel extends AbstractTableModel {
         switch (c) {
             case 0:
                 return Boolean.class;
-
             case 1:
-                return String.class;
-
+                return LocalTime.class;
             case 2:
                 return LocalDate.class;
-
             case 3:
-                return LocalTime.class;
-
+                return String.class;
+            case 4:
+                return String.class;
             default:
                 return Object.class;
         }

@@ -26,6 +26,7 @@ public class TelaPrincipal {
     private JTable tblTarefas;
     private JCheckBox chkExibirFinalizadas;
     private JComboBox comboBox1;
+    private Integer duracaoTarefa = 15;
 
     private List<Tarefa> tarefas;
 
@@ -37,11 +38,12 @@ public class TelaPrincipal {
         btnAdicionarTarefa.addActionListener(e -> {
             try {
                 LocalTime hora = LocalTime.parse(txtHora.getText());
+
                 adicionarTarefa(
                         txtDescricaoTarefa.getText(),
                         txtData.getText(),
                         hora,
-                        DuracaoTarefa
+                        duracaoTarefa
                 );
 
                 txtDescricaoTarefa.setText("");
@@ -63,11 +65,12 @@ public class TelaPrincipal {
             controlador.exibirFinalizadas(selecionado);
         });
 
-        comboBox1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-            String duracaoTarefa =
-            }
+        comboBox1.addActionListener(e -> {
+            String selecionado = comboBox1.getSelectedItem().toString();
+
+            duracaoTarefa = Integer.parseInt(
+                    selecionado.replace(" min", "")
+            );
         });
     }
 

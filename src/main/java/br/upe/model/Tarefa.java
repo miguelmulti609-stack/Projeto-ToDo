@@ -83,6 +83,11 @@ public class Tarefa {
     public void setHora(LocalTime hora) {
         this.Hora = hora;
     }
+
     public Integer getDuracaoTarefa(){return this.DuracaoTarefa;}
+
+    public void setDuracaoTarefa(Integer duracao) {
+        this.DuracaoTarefa = duracao;
+    }
 }
 
