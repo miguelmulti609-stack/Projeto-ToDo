@@ -18,10 +18,10 @@ public class Conflito {
         }
 
         if (listaTarefas.size() == quantidade) {
-            return true;
+            return false;
         }
 
-        return  false;
+        return  true;
     }
 
 

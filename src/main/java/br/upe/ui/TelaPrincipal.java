@@ -32,13 +32,19 @@ public class TelaPrincipal {
 
     private TarefaControlador controlador;
 
+
     public TelaPrincipal() {
         super();
-        tarefas = new ArrayList<>();
+
+
         btnAdicionarTarefa.addActionListener(e -> {
             try {
                 LocalTime hora = LocalTime.parse(txtHora.getText());
-                if (Conflito.detectarConflito(duracaoTarefa, hora, tarefas)) {
+
+                List<Tarefa> tarefasAtivas =
+                        controlador.getTarefaTableModel().getTarefasAtivas();
+
+                if (!Conflito.detectarConflito(duracaoTarefa, hora, tarefasAtivas)) {
                     adicionarTarefa(
                             txtDescricaoTarefa.getText(),
                             txtData.getText(),
