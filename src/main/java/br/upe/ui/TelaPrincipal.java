@@ -28,8 +28,6 @@ public class TelaPrincipal {
     private JComboBox comboBox1;
     private Integer duracaoTarefa = 15;
 
-    private List<Tarefa> tarefas;
-
     private TarefaControlador controlador;
 
 
@@ -41,13 +39,16 @@ public class TelaPrincipal {
             try {
                 LocalTime hora = LocalTime.parse(txtHora.getText());
 
+                DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate Date = LocalDate.parse(txtData.getText(), formatador);
+
                 List<Tarefa> tarefasAtivas =
                         controlador.getTarefaTableModel().getTarefasAtivas();
 
-                if (!Conflito.detectarConflito(duracaoTarefa, hora, tarefasAtivas)) {
+                if (!Conflito.detectarConflito(duracaoTarefa, hora, tarefasAtivas, Date)) {
                     adicionarTarefa(
                             txtDescricaoTarefa.getText(),
-                            txtData.getText(),
+                            Date,
                             hora,
                             duracaoTarefa
                     );
@@ -56,7 +57,16 @@ public class TelaPrincipal {
                     txtData.setText("");
                     txtHora.setText("");
 
-                }} catch (Exception ex) {
+                }else {
+                    JOptionPane.showMessageDialog(
+                            pnlMain,
+                            "Erro, essa atividade está conflitando com outras",
+                            "Conflito",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
                         pnlMain,
                         "Erro, campo preenchido incorretamente.",
@@ -79,11 +89,9 @@ public class TelaPrincipal {
         });
     }
 
-    private void adicionarTarefa(String texto, String data, LocalTime hora, Integer duracao) {
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate Date = LocalDate.parse(data, formatador);
+    private void adicionarTarefa(String texto, LocalDate data, LocalTime hora, Integer duracao) {
 
-        Tarefa tarefa = new Tarefa(texto, tarefas.size(), Date, hora, duracao);
+        Tarefa tarefa = new Tarefa(texto, controlador.getTarefaTableModel().getTarefasAtivas().size(), data, hora, duracao);
         controlador.adicionarTarefaAtiva(tarefa);
         tblTarefas.revalidate();
         tblTarefas.repaint();
