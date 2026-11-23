@@ -1,9 +1,9 @@
 package br.upe.ui;
 
+import br.upe.conflito.*;
 import br.upe.controller.TarefaControlador;
 import br.upe.model.Tarefa;
 import br.upe.model.TarefaTableModel;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -38,19 +38,19 @@ public class TelaPrincipal {
         btnAdicionarTarefa.addActionListener(e -> {
             try {
                 LocalTime hora = LocalTime.parse(txtHora.getText());
+                if (Conflito.detectarConflito(duracaoTarefa, hora, tarefas)) {
+                    adicionarTarefa(
+                            txtDescricaoTarefa.getText(),
+                            txtData.getText(),
+                            hora,
+                            duracaoTarefa
+                    );
 
-                adicionarTarefa(
-                        txtDescricaoTarefa.getText(),
-                        txtData.getText(),
-                        hora,
-                        duracaoTarefa
-                );
+                    txtDescricaoTarefa.setText("");
+                    txtData.setText("");
+                    txtHora.setText("");
 
-                txtDescricaoTarefa.setText("");
-                txtData.setText("");
-                txtHora.setText("");
-
-            } catch (Exception ex) {
+                }} catch (Exception ex) {
                 JOptionPane.showMessageDialog(
                         pnlMain,
                         "Erro, campo preenchido incorretamente.",
@@ -59,7 +59,6 @@ public class TelaPrincipal {
                 );
             }
         });
-
         chkExibirFinalizadas.addActionListener(e -> {
             boolean selecionado = ((JCheckBox) e.getSource()).isSelected();
             controlador.exibirFinalizadas(selecionado);
