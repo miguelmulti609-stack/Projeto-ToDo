@@ -1,19 +1,24 @@
 package br.upe.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Tarefa {
 
     private String descricao;
-    private String Data;
+    private LocalDate Data;
+    private LocalTime Hora;
+    private Integer DuracaoTarefa;
     private LocalDate dataCriacao;
     private LocalDate dataFinalizacao;
     private LocalDate dataVencimento;
     private Boolean finalizada;
     private int ordem;
 
-    public Tarefa(String texto, int ordem, String data) {
+    public Tarefa(String texto, int ordem, LocalDate data, LocalTime hora, Integer duracao) {
         this.Data = data;
+        this.Hora = hora;
+        this.DuracaoTarefa = duracao;
         this.dataCriacao = LocalDate.now();
         this.descricao = texto;
         this.ordem = ordem;
@@ -67,9 +72,22 @@ public class Tarefa {
         this.ordem = ordem;
     }
 
-    public String getData(){return this.Data;}
+    public LocalDate getData(){return this.Data;}
 
-    public void setData(String data) {
+    public void setData(LocalDate data) {
         this.Data = data;
     }
+
+    public LocalTime getHora(){return this.Hora;}
+
+    public void setHora(LocalTime hora) {
+        this.Hora = hora;
+    }
+
+    public Integer getDuracaoTarefa(){return this.DuracaoTarefa;}
+
+    public void setDuracaoTarefa(Integer duracao) {
+        this.DuracaoTarefa = duracao;
+    }
 }
+
