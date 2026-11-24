@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import br.upe.gamificacao.Gamificacao;
+import javax.swing.JOptionPane;
 
 public class TarefaTableModel extends AbstractTableModel {
 
@@ -98,6 +100,14 @@ public class TarefaTableModel extends AbstractTableModel {
         boolean finalizada = (Boolean) aValue;
 
         tarefa.setFinalizada(finalizada);
+        if (finalizada) {
+            Gamificacao.adicionarPontos(10);
+            JOptionPane.showMessageDialog(null, "+10 pontos!\nTotal: " + Gamificacao.getPontos()
+                    + " Pontos\nPatente: " + Gamificacao.getPatente());
+        }
+        else {
+            Gamificacao.adicionarPontos(-10);
+        }
 
         if (finalizada) {
             tarefasAtivas.remove(tarefa);
