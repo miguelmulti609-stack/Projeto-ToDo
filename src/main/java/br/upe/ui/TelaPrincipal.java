@@ -1,19 +1,14 @@
 package br.upe.ui;
 
 import br.upe.conflito.*;
+import br.upe.controller.LembreteControlador;
 import br.upe.controller.TarefaControlador;
 import br.upe.model.Tarefa;
-import br.upe.model.TarefaTableModel;
+
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TelaPrincipal {
@@ -26,7 +21,9 @@ public class TelaPrincipal {
     private JTable tblTarefas;
     private JCheckBox chkExibirFinalizadas;
     private JComboBox comboBox1;
+    private JButton rodarEmSegundoPlanoButton;
     private Integer duracaoTarefa = 15;
+    private LembreteControlador lembreteControlador;
 
     private TarefaControlador controlador;
 
@@ -34,11 +31,14 @@ public class TelaPrincipal {
     public TelaPrincipal() {
         super();
 
+        rodarEmSegundoPlanoButton.addActionListener(e -> {
+            SwingUtilities.getWindowAncestor(pnlMain).setVisible(false);
+        });
 
         btnAdicionarTarefa.addActionListener(e -> {
             try {
                 LocalTime hora = LocalTime.parse(txtHora.getText());
-
+                lembreteControlador = new LembreteControlador(controlador);
                 DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate Date = LocalDate.parse(txtData.getText(), formatador);
 
